@@ -5,6 +5,7 @@ RUN apt-get update
 
 RUN apt-get install -y --no-install-recommends cron rsyslog vim coreutils autoconf make gcc wget
 
+
 # php default ext
 RUN docker-php-ext-install  -j$(nproc) bcmath calendar exif gettext dba mysqli pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm
 
@@ -24,8 +25,6 @@ RUN docker-php-source extract && cd /usr/src/php/ext/gd \
     && docker-php-ext-configure gd --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2 \
     && make && make install \
     && docker-php-ext-install gd
-
-RUN apt-get install -y --no-install-recommends openssl libssl-dev libcurl4-openssl-dev
 
 # php redis ext
 RUN pecl install http://pecl.php.net/get/redis-3.1.4.tgz && docker-php-ext-enable redis
