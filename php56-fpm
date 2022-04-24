@@ -42,8 +42,6 @@ RUN pecl install http://pecl.php.net/get/rdkafka-${RDKAFKA_VERSION}.tgz && docke
 
 RUN pecl install https://pecl.php.net/get/swoole-1.10.5.tgz && docker-php-ext-enable swoole
 
-
-RUN rm -rf /swoole.tar.gz /swoole
 RUN rm -rf /tmp/pear/*
 RUN rm -rf /var/log/*
 RUN rm -rf /usr/src/php && rm -rf /var/lib/apt/lists/*
