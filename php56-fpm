@@ -1,0 +1,51 @@
+FROM php:5.6-fpm
+
+# http://pecl.php.net/package/redis
+ARG REDIS_VERSION=3.1.4
+
+# http://pecl.php.net/package/rdkafka
+ARG RDKAFKA_VERSION=1.0.0
+
+# Dependent installation
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends cron rsyslog vim coreutils autoconf make gcc wget
+
+# php default ext
+RUN docker-php-ext-install  -j$(nproc) bcmath calendar exif gettext dba mysqli pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm
+
+# mcrypt
+RUN apt-get install -y --no-install-recommends libmcrypt-dev
+RUN docker-php-ext-install mcrypt
+
+# php zip ext
+RUN apt-get install -y --no-install-recommends zip unzip libzip-dev
+RUN docker-php-ext-install zip
+
+RUN docker-php-ext-install  -j$(nproc) sockets && docker-php-ext-enable sockets
+
+# php gd ext
+RUN apt-get install -y --no-install-recommends libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+RUN docker-php-source extract && cd /usr/src/php/ext/gd \
+    && docker-php-ext-configure gd --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2 \
+    && make && make install \
+    && docker-php-ext-install gd
+
+RUN apt-get install -y --no-install-recommends openssl libssl-dev libcurl4-openssl-dev
+
+# php redis ext
+RUN pecl install http://pecl.php.net/get/redis-${REDIS_VERSION}.tgz && docker-php-ext-enable redis
+
+# php rdkafka ext
+RUN apt install -y --no-install-recommends librdkafka-dev
+RUN pecl install http://pecl.php.net/get/rdkafka-${RDKAFKA_VERSION}.tgz && docker-php-ext-enable rdkafka
+
+RUN pecl install https://pecl.php.net/get/swoole-1.10.5.tgz && docker-php-ext-enable swoole
+
+
+RUN rm -rf /swoole.tar.gz /swoole
+RUN rm -rf /tmp/pear/*
+RUN rm -rf /var/log/*
+RUN rm -rf /usr/src/php && rm -rf /var/lib/apt/lists/*
+
+EXPOSE 9000
