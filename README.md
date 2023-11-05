@@ -1,18 +1,23 @@
 # 构建
 
 ~~~
-cd 7.4-fpm && docker build -f Dockerfile -t zhiqiangwang/php:7.4-fpm  .
+docker build -f Dockerfile.7.4-fpm -t zhiqiangwang/php:7.4-fpm  .
+docker build -f Dockerfile.7.4-cli -t zhiqiangwang/php:7.4-cli  .
 
-cd 7.4-cli && docker build -f Dockerfile -t zhiqiangwang/php:7.4-cli  .
+docker build -f Dockerfile.7.4-fpm-wxwork-finance -t zhiqiangwang/php:7.4-fpm-wxwork-finance .
+docker build -f Dockerfile.7.4-cli-wxwork-finance -t zhiqiangwang/php:7.4-cli-wxwork-finance .
 
-cd 7.4-wxwork-finance && docker build -f Dockerfile.fpm -t zhiqiangwang/php:7.4-fpm-wxwork-finance .
-cd 7.4-wxwork-finance && docker build -f Dockerfile.cli -t zhiqiangwang/php:7.4-cli-wxwork-finance .
+docker build -f Dockerfile.8.1-fpm -t zhiqiangwang/php:8.1-fpm  .
+docker build -f Dockerfile.8.1-cli -t zhiqiangwang/php:8.1-cli  .
+
+docker build -f Dockerfile.8.2-fpm -t zhiqiangwang/php:8.2-fpm  .
+docker build -f Dockerfile.8.2-cli -t zhiqiangwang/php:8.2-cli  .
 ~~~
 
 
 ## 启动容器
 ~~~
-docker run --name myphp -v /data/wwwroot/laravel/:/var/www/html -d zhiqiangwang/php:7.4-fpm 
+docker run --name myphp -p 9000:9000 -v /data/wwwroot/laravel/:/var/www/html -d zhiqiangwang/php:7.4-fpm 
 ~~~
 
 ## 宿主nginx配置
@@ -24,7 +29,7 @@ server {
     root /var/www/html/laravel/public;
 
     # 静态资源
-    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|css|js)${
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|css|js)$ {
         # 宿主目录
         root /data/wwwroot/laravel/public;
         if (-f $request_filename) {
@@ -32,8 +37,7 @@ server {
             break;
         }
     }
-    
-    
+
     listen 443 ssl http2;
     ssl_certificate    /etc/nginx/ssl/www.zhiqiang.wang.cer;
     ssl_certificate_key   /etc/nginx/ssl/www.zhiqiang.wang.key;
@@ -42,7 +46,6 @@ server {
     ssl_prefer_server_ciphers on;
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
-
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
