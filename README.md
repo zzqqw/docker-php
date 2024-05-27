@@ -17,6 +17,8 @@ docker build -f Dockerfile.8.2-cli -t zhiqiangwang/php:8.2-cli  .
 docker build --build-arg="IMAGE_TAG=7.4-fpm" -f Dockerfile.nginx -t zhiqiangwang/php:7.4-fpm-nginx  .
 
 
+docker build --build-arg="IMAGE_TAG=7.4-fpm" -f Dockerfile.composer -t zhiqiangwang/php:7.4-fpm-composer  .
+
 docker build -f Dockerfile.phpmyadmin -t zhiqiangwang/php:phpmyadmin .
 ~~~
 
