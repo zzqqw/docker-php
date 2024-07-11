@@ -20,6 +20,8 @@ docker build --build-arg="IMAGE_TAG=7.4-fpm" -f Dockerfile.nginx -t zhiqiangwang
 docker build --build-arg="IMAGE_TAG=7.4-fpm" -f Dockerfile.composer -t zhiqiangwang/php:7.4-fpm-composer  .
 
 docker build -f Dockerfile.phpmyadmin -t zhiqiangwang/php:phpmyadmin .
+
+docker build -f Dockerfile.ondrej -t zhiqiangwang/php:ondrej .
 ~~~
 
 
